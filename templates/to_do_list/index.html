@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block Content %}
+    <h1>TO DO LIST
+        <a href="{% url 'to_do_list:task-create' %}">
+        <input class="btn btn-info" style="float:right" type="submit" value="Add task"></a></h1>
+    <div>
+       <table class="table">
+       <tr>
+       <td><strong>Task</strong></td>
+        <td><strong>Created at</strong></td>
+        <td style="color:red"><strong>Deadline</strong></td>
+        <td><strong>Tags</strong></td>
+        <td><strong>Completed</strong></td>
+       </tr>
+    {% if tasks %}
+
+
+      {% for task in tasks %}
+          <tr><td>{{ task.content }}</td>
+              <td>{{task.datetime }}</td>
+              <td style="color:darkred">{{task.deadline }}</td>
+              <td>{% for tag in task.tags.all %}{{ tag }} {% endfor %}</td>
+                <td>{% if task.done %}
+                    Yes
+                    {% else %}
+                    No
+                    {% endif %}</td>
+                <td><a href="{% url 'to_do_list:task-update' pk=task.id %}">
+                    <input type="submit" value="Update task" class="btn btn-warning"></a></td>
+                <td><a href="{% url 'to_do_list:task-delete' pk=task.id %}"><input type="submit" value="Delete task" class="btn btn-dark"></a></td>
+                <td>
+                    {% if task.done %}
+                        <a href="{%  url 'to_do_list:task-change-status' pk=task.id %}">
+                        <input type="submit" value="Undo" class="btn btn-secondary"></a>
+                    {% else %}
+                        <a href="{%  url 'to_do_list:task-change-status' pk=task.id %}">
+                        <input type="submit" value="Complete" class="btn btn-success"></a>
+
+                {% endif %}</td>
+{#                    <a style="float:right" href="{% url 'taxi:assign-or-delete-driver' pk=car.id action='add' %}">#}
+{#           <button class="btn btn-success">Assign me to this car</button></a>#}
+{#    {% else %}#}
+{#        <a style="float:right" href="{% url 'taxi:assign-or-delete-driver' pk=car.id action='remove' %}">#}
+{#            <button class="btn btn-danger">Delete me from this car</button></a>#}
+          </tr>
+        {% endfor %}
+
+    {% else %}
+        <p><strong>There are no tasks to do! You may have a rest!</strong></p>
+    {% endif %}
+
+</table>
+    </div>
+{% endblock %}
